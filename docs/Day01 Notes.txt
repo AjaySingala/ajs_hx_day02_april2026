@@ -1,0 +1,303 @@
+Python code:
+1) Azure OpenAI API Key
+2) Endpoint
+
+Create resources on Azure:
+1) Resource Group
+2) Azure AI service
+	- Deploy two models:
+		- gpt-4o-mini
+		- text-embedding-3-small
+		
+Azure (Microsoft) Foundry portal.
+	- It's an extension to the Azure portal for all AI tasks.
+	
+You are a helpful assistant
+["You" "are" "a" "helpful" "assistant"]
+[3575   553  261 10297      29186] -> Internal representation of "words".
+1) Why numbers?
+LLMs -> system running a machine -> machines do not undertand "language" per se.
+
+LLM -> Large Language Model
+LLMs are trained on a huge amount of data from all over the internet -> public domain.
+	- purhcased data as well
+	OpenAi -> GPT
+	Google -> Gemini
+	Anthropic -> Claude Sonnet
+
+LLM Instructions (message/prompt):
+System: define the behavior of the LLM
+User: User's query
+AI (Assistant): response from the LLM
+
+You are a helpful assistant
+What is the GDP of France?
+
+Role to the LLM: it gets more "reasoning power".
+
+Every time you send a request, the # of tokens is > than the words you send.
+
+? , . ! ( ) = + -
+
+1 word != 1 token
+1 word can be broken into multiple tokens
+	- Capitalization
+		- Capital ization
+
+1 token ~= 75% of a word
+Every LLM has it's own vocabulary
+- vocabulary == dictionary
+- how many words does the LLM recognize - size of the vocabulary.
+
+LLM -> subscription -> pricing is token-based.
+10000 tokens
+FREE:
+- gpt-5 -> very limited tokens
+- tokens exhuasted, it switches to an older model (gpt3).
+	- slower
+	- lower reasoning capability
+	- lower vocabulary
+	
+Copilot, GPT, Gemini -> Enterprise/Business subscriptions - much higher quota.
+
+Bank (17289)
+-> money
+-> the bank of a river
+-> blood bank
+
+LLM has been trained to understand the significance of each word, with every other word befor it, and every other word after, every sentence before/after, every para before/after. THE ENTIRE CONTEXT.
+
+Probability:
+LLM does not always generate 1 single word.
+It generates a list of words, and then picks the one with the highest probability
+
+Query: The capital of France is...
+LLM:
+	The 	0.75
+	is		0.10
+	maybe	0.05
+	was		0.02
+	:
+	:
+	
+top-p = .9 (90%)
+It will randomly pick up a token (word)
+
+top-p = .8
+
+top-k = 5
+
+
+
+
+
+The -> LLM:
+	capital	
+	city
+	country
+	
+The capital -> LLM
+	of		
+	if
+	Paris
+	France
+The capital of -> LLM
+	France
+	:
+The capital of France -> LLM
+	is
+	:
+	:
+The capital of France is -> LLM
+	Paris 0.95
+	Nice  0.10
+	:
+The capital of France is Paris
+
+Hallucination -> wrong!
+Hallucination -> gives you a wrong answer very confidently
+
+Data security and privacy:
+Enterprise/Business -> SLA -> Providers your data will not be used to train our models and your data will not be shared with anyone else.
+
+Our own LLM
+- by training it on our data only!
+	- take ready made base LLM
+		- fine tuning it with enterprise data
+		- train it on your data
+		- it only answers from your data and not anything else (not even it's own data)
+		- Guardrails
+	- build your own model from scratch
+		- very expensive, time consuming process
+		- requires expertise -> technical, domain
+
+Data cleaning (preparing data)
+Garbage in - garbage out
+SLM -> Small Language Model
+
+Meta -> LLama3 -> open source
+
+Tokenization
+Vectorization
+Embedding:
+	- multi-dimensional matrix
+	
+Context window => Total tokens in a request-response
+User query + LLM's output = Context window -> Total tokens in a request-response
+
+Context window size => 8000 tokens
+128k
+
+System prompt 		=>  200 tokens
+User query 			=>  100 tokens
+			Total:      300 tokens
+
+Available tokens:	=> 8000 - 300 => 7700 tokens
+Possible Output from the LLM can be a max of 7700 tokens
+
+But it actually gives only 3500 tokens
+200 + 100 + 3500 => 3800 tokens consumed -> Pay for.
+
+If actual output is 10000
+But CW => 8000
+Available => 7700
+Truncate the output to 7700 (8000 total)
+
+
+System prompt 		=>  200 tokens
+User query 			=>  100 tokens
+Conversation		=> 1000 tokens
+RAG documents		=> 3000 tokens
+
+			Total:     4300 tokens
+			Available: 8000 - 4300 = 3700
+			
+images -> pixels -> values
+models -> specific or multi-modal
+chatgpt -> UI -> model -> GPT
+GPT -> multi-modal
+- generate text, images, videos.
+
+- specific models
+- Sora
+- gemini - Nano Banana 
+
+Query:  sumarize this documents
+
+
+Create your own LLM from scratch
+Fine tuning
+AI apps: App, chatbot, agentic WF
+
+Temperature -> 0 - 1
+0 -> Deterministic
+
+Nov-2022 -> ChatGpt -> GPT 1.0
+June/July 2022.
+Gpt 1.0 was trained on data till March-2022.
+Who won the last FIFA WC?
+FIFA WC 2018.
+Who won the 2022 FIFA WC
+-> Either again given you info about 2018 WC
+-> Hallucination.
+-> I don't know
+
+Apr-2026
+What happened in yesterday's IPL match?
+-> It is not there in it's data!!!
+1) Do i have the data?
+2) Yes, give answer based on that
+3) If not, search the web and answer
+
+ReAct (Reason + Act) Prompting:
+===============================
+Somewhat similar to CoT Promopting:
+Is more applicable Agentic AI / Agentic Workflow
+- we create apps that are Workflows using AI Agents
+---- SYSTEM PROMPT to the agentic wf:
+You are an expert {role}
+Give your analysis based on the context provided by the user.
+Use these tools to give your analysis:
+1) fetch
+2) analyze
+3) reason
+4) summarize
+5) generate
+
+Context: {context}
+User query: {query}
+---
+
+The "tools" code (methods) in our WF app that will be called by the LLM internally.
+fetch: API calls / DB / read files
+
+Local Python Virtual Environment:
+python -m venv .venv
+source ./.venv/bin/activate
+
+CTRL+SHIFT+P
+
+AZURE_OPENAI_API_KEY="<your-AZURE_OPENAI_API_KEY>"
+AZURE_OPENAI_ENDPOINT="<your-AZURE_OPENAI_ENDPOINT>"
+AZURE_OPENAI_DEPLOYMENT=gpt-4o-mini
+AZURE_OPENAI_API_VERSION=2024-02-15-preview
+AZURE_OPENAI_EMBEDDING_DEPLOYMENT=text-embedding-3-small
+
+SYSTEM: define the beahvior of the model
+USER: user query
+ASSISTANT/AI: response from the model/LLM.
+
+Dictionary: key-value pairs
+{
+	"key": "value",
+	"key2": "value 2",
+	"key3": "value 3"
+	:
+}
+JSON string:
+
+"" -> strings
+'' -> a single character / strings
+
+Multi-line string in Python:
+"""
+
+
+"""
+Python: [] -> List / collection / array
+Collection of key-value pairs (dictonary)
+scenarios = [
+    {
+        "role": "Support Executive",
+        "issue": "Delayed delivery",
+        "tone": "Apologetic",
+        "resolution": "10% discount"
+    },
+    {
+        "role": "Premium Support Manager",
+        "issue": "Product defect",
+        "tone": "Highly empathetic",
+        "resolution": "Full refund + replacement"
+    }
+]
+
+gpt-4o-mini -> Generic model -> "assitant".
+
+HexCopilot:
+- Generic LLM that can be used by all departments/BU
+- Before starting the UI/app, 1 one time setup for the BU is to be done
+- specify the BU-based on BU, the system role can be assigned/prompt library etc. to be used
+
+OOP
+
+langchain and langgraph
+- Generic wrapper - can be used with any model.
+
+Analysis 	gpt-4.2
+summary		gpt-4.2
+
+Refine it further - critique/critic -> gpt5.5
+- greater reasoning power.
+
+Code generation/execution
+- claude sonnet
